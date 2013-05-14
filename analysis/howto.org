@@ -12,10 +12,24 @@ curl http://product.dangdang.com/product.aspx?product_id=22926360 > book.html
    html-xml-utils : hxselect/hxclean
 
 * how to crawl all book page
+** by category
+http://category.dangdang.com/all/?category_path=01.00.00.00.00.00
+http://category.dangdang.com/all/?category_path=01.54.24.00.00.00
+*** filter and sort
+http://category.dangdang.com/all/?category_path=01.54.24.00.00.00&sort_type=sort_pubdate_desc&filter=0|0|1|0
+*** dig in the page
+    | info   | CSS                      |
+    | pid    | .shoplist>ul>li .name a  |
+    | price  | .shoplist>ul>li .price_n |
+    | pprice | .shoplist>ul>li .price_r |
+*** page index
+http://category.dangdang.com/all/?category_path=01.54.24.00.00.00&filter=0%7C0%7C1%7C0&page_index=2
+    the page index can be more than 99
+    up to the end, where an error page shows
 ** by product id
 | start      | end        | date            |
 | 22926318 ? | 23203318 ? | <2013-05-12 日> |
-** by category
-   http://category.dangdang.com/all/?category_path=01.00.00.00.00.00
+No! priduct id does not work well!
+
 ** new books
    http://book.dangdang.com/list/newRelease.htm
