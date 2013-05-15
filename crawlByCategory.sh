@@ -17,13 +17,12 @@ MATRIX_TEMP=/tmp/dd.tmp.matrix
 AWK=gawk
 currentTimeInSecond () {
     # for GNU date, in nano, for others in second
-    date "+%s.%N" | $AWK 'sub(".N", "")'
+    date "+%s.%N" | $AWK '{sub(/\.N/, ""); print}'
 }
 #####################
 
 touch $TRY_FILE
 touch $TEMP_FILE
-
 
 for i in $( seq $COUNT )
 do
@@ -43,7 +42,7 @@ do
     #normalize the product page
     cat $TRY_FILE  | $AWK '/charset=/ {gsub(/(GB2312)|(gb2312)/, "UTF-8")} {print}' \
 	| iconv -f GBK -t UTF-8 -c \
-	| hxclean 2> /dev/null 1> $TEMP_FILE
+	| hxclean 1>$TEMP_FILE 2>/dev/null
 
     # parse info
     product_link=$( cat $TEMP_FILE | hxselect ".shoplist>ul>li .name a" )
@@ -57,7 +56,7 @@ do
     cat $TEMP_FILE | hxselect -c ".shoplist>ul>li .price_n" | $AWK 'BEGIN {RS="&yen;"}; /.+/ {print $1}' > $MATRIX_TEMP
     echo "" >> $MATRIX_TEMP
     cat $TEMP_FILE | hxselect -c ".shoplist>ul>li .price_r" | $AWK 'BEGIN {RS="&yen;"}; /.+/ {print $1}' >> $MATRIX_TEMP
-    echo "" >> $MATRIX_TEMP    
+    echo "" >> $MATRIX_TEMP
     echo $product_link | $AWK 'BEGIN {RS="</a>"};/product_id=/ {match($0, /product_id=[0-9]+/);str=substr($0, RSTART, RLENGTH); gsub("product_id=","", str); print str}' >> $MATRIX_TEMP
     echo "" >> $MATRIX_TEMP
     echo $product_link | $AWK '{gsub("[ ]*<[^>]+>[ ]*", "\t"); print}' | $AWK 'BEGIN {RS="[\t]+"}; /.+/ {gsub(/[ ]+/ , "-"); print $1}' >> $MATRIX_TEMP
@@ -68,8 +67,8 @@ do
     # sleep if too quick
     endTime=$( currentTimeInSecond )
     sleepTime=$( echo "$INTERVAL - ($endTime - $startTime)" | bc )
-    [ $( echo "$sleepTime > 0" | bc ) = 1 ] &&  sleep $sleepTime 
-    
+    [ $( echo "$sleepTime > 0" | bc ) -eq 1 ] && sleep $sleepTime
+
 done
 
 
