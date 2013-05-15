@@ -6,7 +6,7 @@ INTERVAL=0.25 #in seconds
 CATEGORY=01.00.00.00.00.00
 #01.54.24.00.00.00
 
-COUNT=99999999
+COUNT=999999
 #200
 
 SITE_URL="http://category.dangdang.com/all/?category_path="$CATEGORY"&filter=0%7C0%7C1%7C0&page_index"
@@ -27,7 +27,7 @@ currentTimeInSecond () {
 touch $TRY_FILE
 touch $TEMP_FILE
 
-for i in $( seq $COUNT )
+for (( i=1; i<$COUNT; i++ ))
 do
     startTime=$( currentTimeInSecond )
     echo crawl page No.$i
