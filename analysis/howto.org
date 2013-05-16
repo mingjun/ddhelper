@@ -18,14 +18,19 @@ http://category.dangdang.com/all/?category_path=01.54.24.00.00.00
 *** filter and sort
 http://category.dangdang.com/all/?category_path=01.54.24.00.00.00&sort_type=sort_pubdate_desc&filter=0|0|1|0
 *** dig in the page
-    | info   | CSS                      |
-    | pid    | .shoplist>ul>li .name a  |
-    | price  | .shoplist>ul>li .price_n |
-    | pprice | .shoplist>ul>li .price_r |
+    | info   | CSS               |
+    | pid    | .maintitle>a      |
+    | price  | .tiplist .price_d |
+    | pprice | .tiplist .price_m |
 *** page index
 http://category.dangdang.com/all/?category_path=01.54.24.00.00.00&filter=0%7C0%7C1%7C0&page_index=2
     the page index can be more than 99
     up to the end, where an error page shows
+*** cookie
+http://category.dangdang.com/all/?category_path=01.00.00.00.00.00&filter=0%7C0%7C1%7C0&page_index=2&sort_type=sort_pubdate_desc
+| save cookie | curl -c "cookie.txt" url |
+| use cookie  | curl -b "cookie.txt" url |
+
 ** by product id
 | start      | end        | date            |
 | 22926318 ? | 23203318 ? | <2013-05-12 日> |

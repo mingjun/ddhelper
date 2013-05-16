@@ -6,7 +6,8 @@ INTERVAL=0.25 #in seconds
 CATEGORY=01.00.00.00.00.00
 #01.54.24.00.00.00
 
-COUNT=999999
+COUNT=2
+#999999
 #200
 
 SITE_URL="http://category.dangdang.com/all/?category_path="$CATEGORY"&filter=0%7C0%7C1%7C0&page_index"
@@ -14,6 +15,7 @@ SITE_URL="http://category.dangdang.com/all/?category_path="$CATEGORY"&filter=0%7
 TRY_FILE=/tmp/dd.try.html
 TEMP_FILE=/tmp/dd.tmp.html
 MATRIX_TEMP=/tmp/dd.tmp.matrix
+COOKIE_TEMP=cookie.txt
 
 ######################
 # define command / function
@@ -33,7 +35,7 @@ do
     echo crawl page No.$i
 
     # download
-    curl $SITE_URL"=$i" > $TRY_FILE 2>/dev/null
+    curl -b $COOKIE_TEMP $SITE_URL"=$i" > $TRY_FILE #2>/dev/null
     
     #check page validation
     if [ $( cat $TRY_FILE | wc -w ) -eq 0 ] 
@@ -48,7 +50,7 @@ do
 	| hxclean 1>$TEMP_FILE 2>/dev/null
 
     # parse info
-    product_link=$( cat $TEMP_FILE | hxselect ".shoplist>ul>li .name a" 2> /dev/null )
+    product_link=$( cat $TEMP_FILE | hxselect ".maintitle>a" 2> /dev/null )
     # check blank(end)
     if [ $( echo $product_link | wc -w) -eq 0 ]
     then
@@ -56,9 +58,9 @@ do
 	break
     fi
 
-    cat $TEMP_FILE | hxselect -c ".shoplist>ul>li .price_n" 2> /dev/null | $AWK 'BEGIN {RS="&yen;"}; /.+/ {print $1}' > $MATRIX_TEMP
+    cat $TEMP_FILE | hxselect -cs "\n" ".tiplist .price_d em" 2> /dev/null 1> $MATRIX_TEMP
     echo "" >> $MATRIX_TEMP
-    cat $TEMP_FILE | hxselect -c ".shoplist>ul>li .price_r" 2> /dev/null | $AWK 'BEGIN {RS="&yen;"}; /.+/ {print $1}' >> $MATRIX_TEMP
+    cat $TEMP_FILE | hxselect -c ".tiplist .price_m" 2> /dev/null | $AWK 'BEGIN {RS="&yen;"}; /.+/ {print $1}' >> $MATRIX_TEMP
     echo "" >> $MATRIX_TEMP
     echo $product_link | $AWK 'BEGIN {RS="</a>"};/product_id=/ {match($0, /product_id=[0-9]+/);str=substr($0, RSTART, RLENGTH); gsub("product_id=","", str); print str}' >> $MATRIX_TEMP
     echo "" >> $MATRIX_TEMP
