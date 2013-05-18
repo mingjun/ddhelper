@@ -1,35 +1,20 @@
 Download book info from dangdang.com
-* get the book page
-call command:
-curl http://product.dangdang.com/product.aspx?product_id=22926360 > book.html
 
-* dig in the page
-  | info     | CSS rules |
-  | price    | #d_price  |
-  | pprice   | .m_price  |
-
-** cmd tools
-   html-xml-utils : hxselect/hxclean
-
-* how to crawl all book page
-** by category
+There are up to 30000 * 25 books.
+how to crawl all books?
+* by category
+** category: forAll
 http://category.dangdang.com/all/?category_path=01.00.00.00.00.00
-http://category.dangdang.com/all/?category_path=01.54.24.00.00.00
-*** filter and sort
-http://category.dangdang.com/all/?category_path=01.54.24.00.00.00&sort_type=sort_pubdate_desc&filter=0|0|1|0
-*** dig in the page
+** page index
+    there 2 kinds of pages based cookie.
+    When we set correct cookie e.g.  __permanent_id=xxxx...xxx
+    the page index can be more than 99.  up to the end, where an error page shows.
+    page_index=2
+** dig in the page
     | info   | CSS                      |
     | pid    | .shoplist>ul>li .name a  |
     | price  | .shoplist>ul>li .price_n |
     | pprice | .shoplist>ul>li .price_r |
-*** page index
-http://category.dangdang.com/all/?category_path=01.54.24.00.00.00&filter=0%7C0%7C1%7C0&page_index=2
-    the page index can be more than 99
-    up to the end, where an error page shows
-** by product id
-| start      | end        | date            |
-| 22926318 ? | 23203318 ? | <2013-05-12 日> |
-No! priduct id does not work well!
 
-** new books
+* new books
    http://book.dangdang.com/list/newRelease.htm
