@@ -2,6 +2,7 @@
 BEGIN {
     RS="\n\n"
     FS="\n"
+    OFS="\t"
 }
 
 {

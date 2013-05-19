@@ -1,0 +1,5 @@
+out/*.html
+out/*.log
+cookies1.txt
+*.class
+*.list

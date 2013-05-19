@@ -1,0 +1,22 @@
+what should do to download dangdang books
+
+* DONE find a correct crawler
+  wget
+* DONE download the correct index page
+** set/get cookie
+** find the upper bound of pages
+* DONE A simple downloader
+* DONE  prestart analysis
+   all 33079 pages
+** sample data
+   | duration      | 3m 20s |
+   | page count    | 497    |
+   | download size | 84MB   |
+** estimate
+ | all duration | 3h 41m |
+ | all size     | 5.4GB  |
+ | 100 MB count | 600    |
+* DONE sequencial downloader
+** save to one big file
+** parse from the big file
+* TODO parallel downloader
